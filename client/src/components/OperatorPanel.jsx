@@ -79,8 +79,8 @@ export default function OperatorPanel({ onApply }) {
         />
       </div>
 
-      <button className="btn-apply" onClick={handleApply}>
-        Apply Config ↓
+      <button className={`btn-apply${!applied ? ' btn-dirty' : ''}`} onClick={handleApply}>
+        {applied ? '✓ Config applied' : '⚠ Unsaved changes — Apply Config'}
       </button>
       {applied && <div className="applied-badge">✓ Config applied — chat reset</div>}
     </div>

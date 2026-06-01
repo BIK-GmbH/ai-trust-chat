@@ -23,7 +23,10 @@ export default function MessageList({ messages }) {
       {messages.map((msg, i) => (
         <div key={i} className={`message ${msg.role}`}>
           <div className={`message-bubble${msg.streaming ? ' streaming-cursor' : ''}`}>
-            {msg.content || (msg.streaming ? '' : '…')}
+            {msg.streaming && !msg.content
+              ? <span className="typing-dots"><span/><span/><span/></span>
+              : (msg.content || '…')
+            }
           </div>
         </div>
       ))}
