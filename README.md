@@ -1,10 +1,22 @@
 # 🤖 AI Trust Level Chat
 
-An interactive React + Vite web app that demonstrates Anthropic's three-tier AI trust hierarchy — Anthropic, Operator, and User. Configure a live system prompt via the Operator panel, then chat with Claude in real time. Supports three themes and deploys fully to GitHub Pages.
+An interactive React + Vite web app that demonstrates Anthropic's three-tier AI trust hierarchy — Anthropic, Operator, and User. Configure a live system prompt via the Operator panel, then chat with an AI in real time. Supports three themes and deploys fully to GitHub Pages.
 
 **UI preview:** [sarathmarson.github.io/ai-trust-chat](https://sarathmarson.github.io/ai-trust-chat/)
 
 > **Note:** The GitHub Pages link shows the full UI but chat is disabled there — the Groq API calls require the Express proxy which only runs locally. To use the chat, clone the repo and run it locally with your own API key (see [Getting Started](#getting-started) below).
+
+---
+
+## Part of a Trilogy
+
+Each project in this series teaches a different way to think about AI prompts and behaviour:
+
+| Project | Approach | What it teaches |
+|---|---|---|
+| [prompt-quality-checker](https://github.com/SarathMarson7/prompt-quality-checker-) | Regex heuristics | Is my prompt structurally well-formed? |
+| **ai-trust-chat** | Live system prompt manipulation | How do AI trust levels change behaviour? |
+| [semantic-prompt-rewriter](https://github.com/SarathMarson7/semantic-prompt-rewriter) | Real AI semantic understanding | What does my prompt actually mean to an AI? |
 
 ---
 
@@ -32,7 +44,7 @@ The app visualises Anthropic's trust level model in a working chat interface:
 
 Configure the operator settings, click **Apply Config**, and start chatting. The system prompt preview updates live so you can see exactly what gets sent to the AI model (Llama 3 via Groq).
 
-> **Note on terminology:** The *concept* demonstrated here — the three-tier trust hierarchy — comes from Anthropic's model specification. The AI model powering the live chat is **Llama 3 (via Groq)**, not Claude. The trust levels apply to any LLM; Groq is used here because it offers a free API tier with no credit card required.
+> **Note on terminology:** The *concept* demonstrated here — the three-tier trust hierarchy — comes from [Anthropic's model specification](https://www.anthropic.com/research/model-specification). The AI model powering the live chat is **Llama 3 (via Groq)**, not Claude. The trust levels apply to any LLM; Groq is used here because it offers a free API tier with no credit card required.
 
 ---
 
@@ -40,8 +52,8 @@ Configure the operator settings, click **Apply Config**, and start chatting. The
 
 - **Live system prompt preview** — see the generated system prompt update as you configure the operator panel
 - **Persona control** — set a custom persona name (e.g. "Restricted Assistant", "German Tutor")
-- **Language enforcement** — constrain Claude to respond in a specific language
-- **Topic blocking** — comma-separated list of topics Claude will decline to discuss
+- **Language enforcement** — constrain the AI to respond in a specific language
+- **Topic blocking** — comma-separated list of topics the AI will decline to discuss
 - **Tone selection** — Professional, Friendly, or Formal
 - **3 themes** — Light ☀️, Grey 🌥, Dark 🌙 — persisted via `localStorage`
 - **Real-time chat** — powered by the Groq API (Llama 3 model)
@@ -148,7 +160,32 @@ Outputs to `client/dist/`. The build sets the correct base path (`/ai-trust-chat
 4. Set **Tone**: `Professional`
 5. Click **Apply Config ↓**
 6. In the chat, type: *"What does your competitor offer?"*
-7. Watch the operator rule take effect — Claude will decline based on the system prompt
+7. Watch the operator rule take effect — the AI will decline based on the system prompt
+
+---
+
+## Troubleshooting
+
+**Chat not responding / network error**
+
+The app needs two servers running at the same time: Vite on `:5173` and the Express proxy on `:3001`. Running `npm run dev` starts both. If port `3001` is already in use by another process, kill it first:
+
+```bash
+# macOS / Linux
+lsof -ti:3001 | xargs kill
+
+# Windows
+netstat -ano | findstr :3001
+taskkill /PID <PID> /F
+```
+
+**`GROQ_API_KEY` not found**
+
+Make sure you copied `.env.example` to `.env` (not `.env.example.env`) and that the file sits at the repo root, not inside `client/` or `server/`.
+
+**GitHub Pages shows UI but chat does nothing**
+
+Expected — the Express proxy is not deployed to Pages. Chat only works when running locally with a valid API key.
 
 ---
 
@@ -193,5 +230,11 @@ The app is split into two parts that only exist locally — in production everyt
 **Production:** Pure static SPA on GitHub Pages. The Express server is not deployed — the Groq API key stays in your local environment only.
 
 The operator config (persona, language, blocked topics, tone) is assembled into a system prompt string by `promptPreview.js` and passed as the `system` field on every API call via `useChat.js`. Switching personas immediately changes the model's behaviour for all subsequent messages.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
 
 [![CI](https://github.com/sarathmarson/ai-trust-chat/actions/workflows/ci.yml/badge.svg)](https://github.com/sarathmarson/ai-trust-chat/actions/workflows/ci.yml)
