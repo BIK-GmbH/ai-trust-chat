@@ -30,7 +30,9 @@ The app visualises Anthropic's trust level model in a working chat interface:
 | **Level 2 — Operator** | Left panel (you) | Sets persona name, language, blocked topics, and tone |
 | **Level 3 — User** | Chat input | Sends messages within the operator-defined constraints |
 
-Configure the operator settings, click **Apply Config**, and start chatting. The system prompt preview updates live so you can see exactly what gets sent to Claude.
+Configure the operator settings, click **Apply Config**, and start chatting. The system prompt preview updates live so you can see exactly what gets sent to the AI model (Llama 3 via Groq).
+
+> **Note on terminology:** The *concept* demonstrated here — the three-tier trust hierarchy — comes from Anthropic's model specification. The AI model powering the live chat is **Llama 3 (via Groq)**, not Claude. The trust levels apply to any LLM; Groq is used here because it offers a free API tier with no credit card required.
 
 ---
 
@@ -190,6 +192,6 @@ The app is split into two parts that only exist locally — in production everyt
 
 **Production:** Pure static SPA on GitHub Pages. The Express server is not deployed — the Groq API key stays in your local environment only.
 
-The operator config (persona, language, blocked topics, tone) is assembled into a system prompt string by `promptPreview.js` and passed as the `system` field on every API call via `useChat.js`. Switching personas immediately changes Claude's behaviour for all subsequent messages.
+The operator config (persona, language, blocked topics, tone) is assembled into a system prompt string by `promptPreview.js` and passed as the `system` field on every API call via `useChat.js`. Switching personas immediately changes the model's behaviour for all subsequent messages.
 
 [![CI](https://github.com/sarathmarson/ai-trust-chat/actions/workflows/ci.yml/badge.svg)](https://github.com/sarathmarson/ai-trust-chat/actions/workflows/ci.yml)
