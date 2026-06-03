@@ -6,7 +6,7 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/ai-trust-chat/' : '/',
   plugins: [react()],
   server: {
-    port: 5173,
+    port: 5174,
     proxy: {
       '/api': 'http://localhost:3001'
     }
